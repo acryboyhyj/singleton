@@ -40,6 +40,6 @@
             Singleton() = default;
         };
 
-        int main() { static Singleton s = Singleton::GetInstance(); }
+        int main() { static Singleton& s = Singleton::GetInstance(); }
     
 

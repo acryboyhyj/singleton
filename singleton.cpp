@@ -7,26 +7,34 @@ public:
     Singleton& operator=(const Singleton&) = delete;
     Singleton(const Singleton&)            = delete;
 
-    static T* GetInstance() {
-        if (s == nullptr) {
-            std::lock_guard<std::mutex> lock(m_mutex);
-            if (s == nullptr) {
-                s = new Singleton();
-                return s;
-            }
-        }
+    static T& GetInstance() {
+        static T instance;
+        return instance;
     }
-    ~Singleton() {}
+    virtual ~Singleton() = default;
 
-private:
+protected:
     Singleton() = default;
-    static T* s;
-    static std::mutex m_mutex;
 };
 
-template <class T>
-std::mutex Singleton<T>::m_mutex;
-template <class T>
-T* Singleton<T>::s = nullptr;
+class SingletonInstance : public Singleton<SingletonInstance> {
+    friend class Singleton<SingletonInstance>;
 
-class SingletonInstance : public Singleton<SingletonInstance> {};
+public:
+    void SetValue(int value) { value = m_value; }
+    void Print() { std::cout << m_value; }
+
+private:
+    SingletonInstance() {}
+
+    ~SingletonInstance() {}
+
+    int m_value;
+};
+
+int main() {
+    static SingletonInstance& s = Singleton<SingletonInstance>::GetInstance();
+    s.SetValue(12);
+    s.Print();
+    return 0;
+}
