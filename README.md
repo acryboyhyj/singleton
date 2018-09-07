@@ -1,7 +1,11 @@
-  1.dclp,new singleton会有错.  
+  1.dclp,new singleton会有错.编译器将指令重排  
     _instance = // Step 3
-    operator new(sizeof(Singleton)); // Step 1
-     new (_instance) Singleton; // Step 2
+    
+   operator new(sizeof(Singleton)); // Step 1
+     
+    new (_instance) Singleton; // Step 2
+    
+    
      
   线程A执行31后中断，此时s不是空指针，都是指向内存没有正确初始化,不完全对象
     
